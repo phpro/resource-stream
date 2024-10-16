@@ -1,0 +1,26 @@
+{
+    "name": "phpro/resource-stream",
+    "description": "A safe OOP wrapper around resource streams",
+    "type": "library",
+    "suggest": {
+        "guzzlehttp/psr7": "If you want to use PSR-7 streams direclty as a resource stream"
+    },
+    "require-dev": {
+        "guzzlehttp/psr7": "^2.7"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Phpro\\ResourceStream\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Toon Verwerft",
+            "email": "toonverwerft@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1"
+    }
+}
