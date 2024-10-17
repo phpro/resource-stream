@@ -23,7 +23,7 @@ jobs:
               with:
                   php-version: ${{ matrix.php-versions }}
                   tools: ${{ matrix.composer-versions }}
-                  extensions: xdebug, mbstring, posix, pcov
+                  extensions: xdebug, mbstring, posix, pcov, intl
             - name: Check Versions
               run: |
                 php -v
