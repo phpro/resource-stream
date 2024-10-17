@@ -76,7 +76,7 @@ use Phpro\ResourceStream\Factory\MemoryStream;
 $stream = MemoryStream::create();
 ```
 
-### PsrStream
+### Psr7Stream
 
 Creates a stream from a PSR-7 stream / request / response.
 before you can use this stream, you'll need to install the `guzzlehttp/psr-7` package which contains a stream wrapper implementation.
@@ -86,11 +86,11 @@ composer require guzzlehttp/psr-7
 ```
 
 ```php
-use Phpro\ResourceStream\Factory\PsrStream;
+use Phpro\ResourceStream\Factory\Psr7Stream;
 
-$stream = PsrStream::createFromStream($anyPsr7Stream);
-$stream = PsrStream::createFromRequest($anyPsr7Request);
-$stream = PsrStream::createFromResponse($anyPsr7Response);
+$stream = Psr7Stream::createFromStream($anyPsr7Stream);
+$stream = Psr7Stream::createFromRequest($anyPsr7Request);
+$stream = Psr7Stream::createFromResponse($anyPsr7Response);
 ```
 
 ### TmpStream

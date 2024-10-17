@@ -11,7 +11,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-final class PsrStream
+final class Psr7Stream
 {
     /**
      * @throws \InvalidArgumentException
