@@ -8,14 +8,14 @@ use Phpro\ResourceStream\Factory\MemoryStream;
 use Phpro\ResourceStream\ResourceStream;
 
 /**
- * @param ResourceStream<resource> $stream
+ * @param ResourceStream<closed-resource> $stream
  */
 function assertClosed(ResourceStream $stream): void
 {
 }
 
 /**
- * @param ResourceStream<closed-resource> $stream
+ * @param ResourceStream<resource> $stream
  */
 function assertOpened(ResourceStream $stream): void
 {
