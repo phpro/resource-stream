@@ -24,9 +24,7 @@ $stream = (new ResourceStream(fopen('php://temp', 'r+')))
 
 // Various ways to read:
 echo $stream->read();
-// Or
 echo $stream->readLine();
-// Or
 echo $stream->read();
 
 // Get access to PHP's inner resource stream
