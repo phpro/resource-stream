@@ -1,41 +1,55 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Phpro\ResourceStream;
 
-use Phpro\ResourceStream\Exception\RuntimeException;
-use Phpro\ResourceStream\Exception\StreamActionFailureException;
+use Phpro\ResourceStream\ErrorHandling\SafeStreamAction;
 use Phpro\ResourceStream\Exception\ResourceStreamException;
+use Phpro\ResourceStream\Exception\RuntimeException;
 
 /**
- * @template T of resource|closed-resource
+ * @psalm-type AnyResource = resource | closed-resource
+ *
+ * @template T of AnyResource
  */
 final class ResourceStream
 {
+    private const DEFAULT_BUFFER_SIZE = 8192;
+
     /**
-     * @param T $resource
+     * @param resource $resource
+     *
+     * @throws RuntimeException
      */
     public function __construct(
-        private $resource,
+        private mixed $resource,
     ) {
+        $this->unwrap();
     }
 
     /**
      * @throws ResourceStreamException
      *
      * @return resource
-     * @psalm-if-this-is self<resource>
+     *
+     * @psalm-this-out self<resource>
      */
-    public function unwrap()
+    public function unwrap(): mixed
     {
         if (!$this->isOpen()) {
             throw ResourceStreamException::noResource();
         }
 
+        /** @var resource */
         return $this->resource;
     }
 
     /**
      * @param \Closure(resource): void $closure
+     *
+     * @throws RuntimeException
+     *
      * @return self
      */
     public function apply(\Closure $closure): self
@@ -55,16 +69,21 @@ final class ResourceStream
 
     public function isOpen(): bool
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         return is_resource($this->resource);
     }
 
     /**
-     * @return string|null
      * @throws RuntimeException
+     *
+     * @return string|null
      */
     public function uri(): ?string
     {
-        return stream_get_meta_data($this->unwrap())['uri'] ?? null;
+        $resource = $this->unwrap();
+        $meta = stream_get_meta_data($resource);
+
+        return $meta['uri'] ?? null;
     }
 
     /**
@@ -73,15 +92,18 @@ final class ResourceStream
     public function rewind(): self
     {
         $resource = $this->unwrap();
-        $result = rewind($resource);
-        if ($result === false) {
-            throw StreamActionFailureException::unableToRewind();
-        }
+
+        SafeStreamAction::run(
+            static fn (): bool => rewind($resource),
+            'Failed to rewind resource stream.'
+        );
 
         return $this;
     }
 
     /**
+     * @param ResourceStream<resource> $targetStream
+     *
      * @throws RuntimeException
      */
     public function copyTo(ResourceStream $targetStream, ?int $length = null, int $offset = 0): ResourceStream
@@ -89,15 +111,17 @@ final class ResourceStream
         $resource = $this->unwrap();
         $target = $targetStream->unwrap();
 
-        $result = stream_copy_to_stream($resource, $target, $length, $offset);
-        if ($result === false) {
-            throw StreamActionFailureException::unableToCopyStream();
-        }
+        SafeStreamAction::run(
+            static fn (): int => stream_copy_to_stream($resource, $target, $length, $offset),
+            'Failed to copy to resource stream.'
+        );
 
         return $targetStream;
     }
 
     /**
+     * @param ResourceStream<resource> $sourceStream
+     *
      * @throws RuntimeException
      */
     public function copyFrom(ResourceStream $sourceStream, ?int $length = null, int $offset = 0): self
@@ -105,16 +129,17 @@ final class ResourceStream
         $source = $sourceStream->unwrap();
         $resource = $this->unwrap();
 
-        $result = stream_copy_to_stream($source, $resource, $length, $offset);
-        if ($result === false) {
-            throw StreamActionFailureException::unableToCopyStream();
-        }
+        SafeStreamAction::run(
+            static fn (): int => stream_copy_to_stream($source, $resource, $length, $offset),
+            'Failed to copy from resource stream.'
+        );
 
         return $this;
     }
 
     /**
      * @psalm-this-out ResourceStream<closed-resource>
+     *
      * @throws RuntimeException
      */
     public function close(): void
@@ -133,12 +158,11 @@ final class ResourceStream
     public function getContents(): string
     {
         $resource = $this->unwrap();
-        $content = stream_get_contents($resource);
-        if ($content === false) {
-            throw StreamActionFailureException::unableToRead();
-        }
 
-        return $content;
+        return SafeStreamAction::run(
+            static fn (): string => stream_get_contents($resource),
+            'Failed to read contents of resource stream.'
+        );
     }
 
     /**
@@ -146,28 +170,39 @@ final class ResourceStream
      */
     public function size(): int
     {
-        $stat = @fstat($this->unwrap());
-        if ($stat === false) {
-            throw StreamActionFailureException::unableToStat();
-        }
+        $resource = $this->unwrap();
+        $stat = SafeStreamAction::run(
+            static fn (): array => fstat($resource),
+            'Failed to stat resource stream.'
+        );
 
-        return $stat['size'] ?? 0;
+        return (int) ($stat['size'] ?? 0);
     }
 
     /**
      * @throws RuntimeException
      */
-    public function read(int $length = null): string
+    public function read(int $length = self::DEFAULT_BUFFER_SIZE): string
     {
-        $length ??= $this->size();
         $resource = $this->unwrap();
-        $content = @fread($resource, $length);
 
-        if ($content === false) {
-            throw StreamActionFailureException::unableToRead();
-        }
+        return SafeStreamAction::run(
+            static fn (): string => fread($resource, $length),
+            'Failed to read contents of resource stream.'
+        );
+    }
 
-        return $content;
+    /**
+     * @throws RuntimeException
+     */
+    public function readLine(int $length = self::DEFAULT_BUFFER_SIZE, string $ending = ''): string
+    {
+        $resource = $this->unwrap();
+
+        return SafeStreamAction::run(
+            static fn (): string => stream_get_line($resource, $length, $ending),
+            'Failed to read contents of resource stream.'
+        );
     }
 
     /**
@@ -176,11 +211,11 @@ final class ResourceStream
     public function write(string $data): self
     {
         $resource = $this->unwrap();
-        $result = @fwrite($resource, $data);
 
-        if ($result === false) {
-            throw StreamActionFailureException::unableToWrite();
-        }
+        SafeStreamAction::run(
+            static fn (): int => fwrite($resource, $data),
+            'Failed to write to resource stream.'
+        );
 
         return $this;
     }

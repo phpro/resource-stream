@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Phpro\ResourceStream\Factory;
 
 use GuzzleHttp\Psr7\StreamWrapper;
@@ -12,6 +14,8 @@ use Psr\Http\Message\StreamInterface;
 final class PsrStream
 {
     /**
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      * @throws ResourceStreamException
      */
     public static function createFromStream(StreamInterface $stream): ResourceStream
@@ -30,6 +34,8 @@ final class PsrStream
     }
 
     /**
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      * @throws ResourceStreamException
      */
     public static function createFromRequest(RequestInterface $request): ResourceStream
@@ -39,6 +45,8 @@ final class PsrStream
     }
 
     /**
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      * @throws ResourceStreamException
      */
     public static function createFromResponse(ResponseInterface $response): ResourceStream

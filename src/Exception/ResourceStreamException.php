@@ -8,7 +8,7 @@ final class ResourceStreamException extends RuntimeException
 {
     public static function noResource(): self
     {
-        return new self('Expected an opened resource stream.');
+        return new self('Expected an open resource stream.');
     }
 
     public static function fromClass(object $class): self

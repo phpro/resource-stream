@@ -8,7 +8,7 @@ use Phpro\ResourceStream\ErrorHandling\SafeStreamAction;
 use Phpro\ResourceStream\Exception\RuntimeException;
 use Phpro\ResourceStream\ResourceStream;
 
-final class TmpStream
+final class MemoryStream
 {
     /**
      * @throws RuntimeException
@@ -16,8 +16,8 @@ final class TmpStream
     public static function create(): ResourceStream
     {
         $resource = SafeStreamAction::run(
-            static fn () => \tmpfile(),
-            'Unable to open temporary file'
+            static fn () => fopen('php://memory', 'w+b'),
+            'Unable to open file "php://memory"'
         );
 
         return new ResourceStream($resource);

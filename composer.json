@@ -6,7 +6,9 @@
         "guzzlehttp/psr7": "If you want to use PSR-7 streams direclty as a resource stream"
     },
     "require-dev": {
-        "guzzlehttp/psr7": "^2.7"
+        "guzzlehttp/psr7": "^2.7",
+        "vimeo/psalm": "^5.26",
+        "php-cs-fixer/shim": "^3.64"
     },
     "license": "MIT",
     "autoload": {

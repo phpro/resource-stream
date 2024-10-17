@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Phpro\ResourceStream\Factory;
 
+use Phpro\ResourceStream\ErrorHandling\SafeStreamAction;
 use Phpro\ResourceStream\Exception\ResourceStreamException;
-use Phpro\ResourceStream\Exception\StreamActionFailureException;
+use Phpro\ResourceStream\Exception\RuntimeException;
 use Phpro\ResourceStream\ResourceStream;
 
 final class FileStream
@@ -12,8 +15,7 @@ final class FileStream
     public const WRITE_MODE = 'wb';
 
     /**
-     * @throws ResourceStreamException
-     * @throws StreamActionFailureException
+     * @throws RuntimeException
      */
     public static function create(string $filePath, string $mode): ResourceStream
     {
@@ -21,10 +23,10 @@ final class FileStream
             throw ResourceStreamException::forFilePath($filePath);
         }
 
-        $resource = @fopen($filePath, $mode);
-        if ($resource === false) {
-            throw StreamActionFailureException::unableToOpen($filePath);
-        }
+        $resource = SafeStreamAction::run(
+            static fn () => fopen($filePath, $mode),
+            'Unable to open file "'.$filePath.'"'
+        );
 
         return new ResourceStream($resource);
     }
