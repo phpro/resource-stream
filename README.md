@@ -1,6 +1,6 @@
 # Resource Stream
 
-A safe OOP wrapper around resource streams in PHP:
+A safe OOP wrapper around resource [streams](https://www.php.net/manual/en/book.stream.php) in PHP:
 
 * No need to worry about streams that have been closed.
 * Instead of returning `false`, detailed exceptions are thrown when something goes wrong.
