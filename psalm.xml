@@ -12,6 +12,7 @@
         <directory name="src"/>
         <directory name="tests/static-analysis"/>
         <ignoreFiles>
+            <file name=".php-cs-fixer.php" />
             <directory name="tests"/>
         </ignoreFiles>
     </projectFiles>

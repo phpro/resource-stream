@@ -7,10 +7,6 @@ return (new PhpCsFixer\Config())
                 getcwd().'/src',
                 getcwd().'/tests',
             ])
-            ->exclude([
-                'var',
-                'migrations/*',
-            ])
     )
     ->setRiskyAllowed(true)
     ->setParallelConfig(\PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())

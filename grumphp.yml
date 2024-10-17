@@ -2,7 +2,9 @@ grumphp:
     tasks:
         phpunit: ~
         psalm: ~
-        phpcsfixer: ~
+        phpcsfixer:
+            config: .php-cs-fixer.php
+            config_contains_finder: true
         clover_coverage:
             clover_file: clover-coverage.xml
             metadata:

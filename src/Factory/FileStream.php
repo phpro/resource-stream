@@ -12,6 +12,7 @@ use Phpro\ResourceStream\ResourceStream;
 final class FileStream
 {
     public const READ_MODE = 'rb';
+    public const READ_WRITE_MODE = 'w+b';
     public const WRITE_MODE = 'wb';
 
     /**
