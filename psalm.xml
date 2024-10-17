@@ -4,6 +4,7 @@
         phpVersion="8.1"
         resolveFromConfigFile="true"
         checkForThrowsDocblock="true"
+        findUnusedPsalmSuppress="true"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="https://getpsalm.org/schema/config"
         xsi:schemaLocation="https://getpsalm.org/schema/config ../vendor/vimeo/psalm/config.xsd"
@@ -13,7 +14,7 @@
         <directory name="tests/static-analysis"/>
         <ignoreFiles>
             <file name=".php-cs-fixer.php" />
-            <directory name="tests"/>
+            <directory name="tests/Unit"/>
         </ignoreFiles>
     </projectFiles>
 </psalm>

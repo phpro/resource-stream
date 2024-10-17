@@ -29,11 +29,8 @@ final class PsrStream
         }
         // @codeCoverageIgnoreEnd
 
-        /**
-         * @psalm-suppress DocblockTypeContradiction
-         * Theoretically, getResource could return `false`. No test-case found for this.
-         */
         // @codeCoverageIgnoreStart
+        // Theoretically, getResource could return `false`. No test-case found for this.
         if (!is_resource($resource = StreamWrapper::getResource($stream))) {
             throw ResourceStreamException::fromClass($stream);
         }
