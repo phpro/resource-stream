@@ -16,6 +16,7 @@ use Phpro\ResourceStream\Exception\RuntimeException;
 final class ResourceStream
 {
     private const DEFAULT_BUFFER_SIZE = 8192;
+    private bool $keepAlive = false;
 
     /**
      * @param resource $resource
@@ -28,6 +29,20 @@ final class ResourceStream
         private mixed $resource,
     ) {
         $this->unwrap();
+    }
+
+    public function __destruct()
+    {
+        if (!$this->keepAlive) {
+            $this->close();
+        }
+    }
+
+    public function keepAlive(): self
+    {
+        $this->keepAlive = true;
+
+        return $this;
     }
 
     /**
@@ -141,8 +156,6 @@ final class ResourceStream
 
     /**
      * @psalm-this-out ResourceStream<closed-resource>
-     *
-     * @throws RuntimeException
      */
     public function close(): void
     {
@@ -197,7 +210,7 @@ final class ResourceStream
     /**
      * @throws RuntimeException
      */
-    public function readLine(int $length = self::DEFAULT_BUFFER_SIZE, string $ending = ''): string
+    public function readLine(int $length = self::DEFAULT_BUFFER_SIZE, string $ending = \PHP_EOL): string
     {
         $resource = $this->unwrap();
 

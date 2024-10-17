@@ -11,9 +11,9 @@ use Phpro\ResourceStream\ResourceStream;
 final class MemoryStream
 {
     /**
-     * @return ResourceStream<resource>
-     *
      * @throws RuntimeException
+     *
+     * @return ResourceStream<resource>
      */
     public static function create(): ResourceStream
     {

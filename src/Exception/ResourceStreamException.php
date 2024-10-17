@@ -16,12 +16,8 @@ final class ResourceStreamException extends RuntimeException
         return new self(sprintf('Could not get resource of given stream: %s', get_class($class)));
     }
 
-    public static function forFilePath(string $filePath, string $details = ''): self
+    public static function forFilePath(string $filePath): self
     {
-        return new self(sprintf(
-            'Could not read file: "%s".%s',
-            $filePath,
-            $details ? '('.$details.')' : ''
-        ));
+        return new self(sprintf('Could not read file: "%s".', $filePath));
     }
 }
