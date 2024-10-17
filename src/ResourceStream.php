@@ -222,6 +222,30 @@ final class ResourceStream
 
     /**
      * @throws RuntimeException
+     *
+     * @return \Generator<int, string, mixed, void>
+     */
+    public function readLines(int $length = self::DEFAULT_BUFFER_SIZE, string $ending = \PHP_EOL): \Generator
+    {
+        while (!$this->isEof()) {
+            yield $this->readLine($length, $ending);
+        }
+    }
+
+    /**
+     * @throws RuntimeException
+     *
+     * @return \Generator<int, string, mixed, void>
+     */
+    public function readBatches(int $length = self::DEFAULT_BUFFER_SIZE): \Generator
+    {
+        while (!$this->isEof()) {
+            yield $this->read($length);
+        }
+    }
+
+    /**
+     * @throws RuntimeException
      */
     public function write(string $data): self
     {

@@ -24,8 +24,14 @@ $stream = (new ResourceStream(fopen('php://temp', 'r+')))
 
 // Various ways to read:
 echo $stream->read();
+echo $stream->read($bufferSize);
 echo $stream->readLine();
-echo $stream->read();
+echo $stream->readLine($bufferSize, ending: \PHP_EOL);
+echo $stream->getContents();
+
+// Or in batches (Generator<string>)
+$cursor = $stream->readBatches($bufferSize);
+$cursor = $stream->readLines($bufferSize, ending: \PHP_EOL); 
 
 // Get access to PHP's inner resource stream
 $innerStream = $stream->unwrap();

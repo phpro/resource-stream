@@ -68,18 +68,39 @@ class ReadStreamTest extends TestCase
     }
 
     #[Test]
+    public function it_can_read_line_from_stream(): void
+    {
+        $stream = MemoryStream::create()
+            ->write('hello'.PHP_EOL.'world')
+            ->rewind();
+
+        $line = $stream->readLine();
+
+        self::assertSame('hello', $line);
+    }
+
+    #[Test]
     public function it_can_read_lines_from_stream(): void
     {
         $stream = MemoryStream::create()
             ->write('hello'.PHP_EOL.'world')
             ->rewind();
 
-        $lines = [];
-        while (!$stream->isEof()) {
-            $lines[] = $stream->readLine();
-        }
+        $lines = iterator_to_array($stream->readLines());
 
         self::assertSame(['hello', 'world'], $lines);
+    }
+
+    #[Test]
+    public function it_can_read_batches(): void
+    {
+        $stream = MemoryStream::create()
+            ->write('hello'.PHP_EOL.'world')
+            ->rewind();
+
+        $chars = implode('', iterator_to_array($stream->readBatches(1)));
+
+        self::assertSame('hello'.PHP_EOL.'world', $chars);
     }
 
     #[Test]
