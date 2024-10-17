@@ -21,6 +21,8 @@ final class ResourceStream
      * @param resource $resource
      *
      * @throws RuntimeException
+     *
+     * @psalm-this-out self<resource>
      */
     public function __construct(
         private mixed $resource,

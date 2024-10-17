@@ -15,6 +15,8 @@ final class FileStream
     public const WRITE_MODE = 'wb';
 
     /**
+     * @return ResourceStream<resource>
+     *
      * @throws RuntimeException
      */
     public static function create(string $filePath, string $mode): ResourceStream

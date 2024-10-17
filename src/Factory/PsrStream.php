@@ -14,6 +14,8 @@ use Psr\Http\Message\StreamInterface;
 final class PsrStream
 {
     /**
+     * @return ResourceStream<resource>
+     *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      * @throws ResourceStreamException
@@ -34,6 +36,8 @@ final class PsrStream
     }
 
     /**
+     * @return ResourceStream<resource>
+     *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      * @throws ResourceStreamException
@@ -45,6 +49,8 @@ final class PsrStream
     }
 
     /**
+     * @return ResourceStream<resource>
+     *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      * @throws ResourceStreamException
