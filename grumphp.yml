@@ -1,0 +1,9 @@
+grumphp:
+    tasks:
+        phpunit: ~
+        psalm: ~
+        phpcsfixer: ~
+        clover_coverage:
+            clover_file: clover-coverage.xml
+            metadata:
+                priority: -100

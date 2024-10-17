@@ -3,3 +3,4 @@
 .phpunit.cache
 clover-coverage.xml
 infection-log.txt
+composer.lock

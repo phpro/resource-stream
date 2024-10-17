@@ -27,12 +27,14 @@ final class PsrStream
         if (!class_exists(StreamWrapper::class)) {
             throw new \RuntimeException('Please run: "composer require guzzle/psr-7" if you want to load a PSR-7 resource stream.');
         }
-        /** @codeCoverageIgnoreEnd */
-        $resource = StreamWrapper::getResource($stream);
+        // @codeCoverageIgnoreEnd
+
+        /**
+         * @psalm-suppress DocblockTypeContradiction
+         * Theoretically, getResource could return `false`. No test-case found for this.
+         */
         // @codeCoverageIgnoreStart
-        // Theoretically, getResource could return `false`. No test-case found for this.
-        /** @psalm-suppress DocblockTypeContradiction */
-        if (!is_resource($resource)) {
+        if (!is_resource($resource = StreamWrapper::getResource($stream))) {
             throw ResourceStreamException::fromClass($stream);
         }
         // @codeCoverageIgnoreEnd
