@@ -25,7 +25,7 @@ final class Psr7Stream
         // @codeCoverageIgnoreStart
         // StreamWrapper is always available in test-suite.
         if (!class_exists(StreamWrapper::class)) {
-            throw new \RuntimeException('Please run: "composer require guzzle/psr-7" if you want to load a PSR-7 resource stream.');
+            throw new \RuntimeException('Please run: "composer require psr/http-message guzzle/psr-7" if you want to load a PSR-7 resource stream.');
         }
         // @codeCoverageIgnoreEnd
 

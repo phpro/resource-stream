@@ -82,7 +82,7 @@ Creates a stream from a PSR-7 stream / request / response.
 before you can use this stream, you'll need to install the `guzzlehttp/psr-7` package which contains a stream wrapper implementation.
 
 ```bash
-composer require guzzlehttp/psr-7
+composer require psr/http-message guzzlehttp/psr-7
 ```
 
 ```php
