@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(ResourceStream::class)]
-class ReadStreamTest extends TestCase
+class ResourceStreamTest extends TestCase
 {
     #[Test]
     public function it_detects_closed_streams_during_construction(): void

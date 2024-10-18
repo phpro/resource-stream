@@ -38,7 +38,7 @@ class ResourceStreamExceptionTest extends TestCase
         $exception = ResourceStreamException::fromClass(new \stdClass());
 
         $this->expectExceptionObject($exception);
-        $this->expectExceptionMessage('Could not get resource of given stream: stdClass');
+        $this->expectExceptionMessage('Could not get resource of given stream: "stdClass"');
         throw $exception;
     }
 }
