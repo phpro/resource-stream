@@ -67,7 +67,7 @@ final class ResourceStream
      *
      * @throws RuntimeException
      *
-     * @return self
+     * @return self<resource>
      */
     public function apply(\Closure $closure): self
     {
@@ -105,6 +105,8 @@ final class ResourceStream
 
     /**
      * @throws RuntimeException
+     *
+     * @return self<resource>
      */
     public function rewind(): self
     {
@@ -122,6 +124,8 @@ final class ResourceStream
      * @param ResourceStream<resource> $targetStream
      *
      * @throws RuntimeException
+     *
+     * @return ResourceStream<resource>
      */
     public function copyTo(ResourceStream $targetStream, ?int $length = null, int $offset = 0): ResourceStream
     {
@@ -140,6 +144,8 @@ final class ResourceStream
      * @param ResourceStream<resource> $sourceStream
      *
      * @throws RuntimeException
+     *
+     * @return self<resource>
      */
     public function copyFrom(ResourceStream $sourceStream, ?int $length = null, int $offset = 0): self
     {
@@ -246,6 +252,8 @@ final class ResourceStream
 
     /**
      * @throws RuntimeException
+     *
+     * @return self<resource>
      */
     public function write(string $data): self
     {
