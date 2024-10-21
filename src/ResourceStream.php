@@ -38,6 +38,9 @@ final class ResourceStream
         }
     }
 
+    /**
+     * @return $this
+     */
     public function keepAlive(): self
     {
         $this->keepAlive = true;
@@ -67,7 +70,7 @@ final class ResourceStream
      *
      * @throws RuntimeException
      *
-     * @return self<resource>
+     * @return $this
      */
     public function apply(\Closure $closure): self
     {
@@ -106,7 +109,7 @@ final class ResourceStream
     /**
      * @throws RuntimeException
      *
-     * @return self<resource>
+     * @return $this
      */
     public function rewind(): self
     {
@@ -145,7 +148,7 @@ final class ResourceStream
      *
      * @throws RuntimeException
      *
-     * @return self<resource>
+     * @return $this
      */
     public function copyFrom(ResourceStream $sourceStream, ?int $length = null, int $offset = 0): self
     {
@@ -253,7 +256,7 @@ final class ResourceStream
     /**
      * @throws RuntimeException
      *
-     * @return self<resource>
+     * @return $this
      */
     public function write(string $data): self
     {
