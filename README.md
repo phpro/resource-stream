@@ -56,6 +56,18 @@ $stream->close();
 
 The following streams are available by default:
 
+### CliStream
+
+Can be used to open up CLI `stdin`, `stdout` and `stderr` streams.
+
+```php
+use Phpro\ResourceStream\Factory\CliStream;
+
+$stdin = CliStream::stdin();
+$stdout = CliStream::stdout();
+$stderr = CliStream::stderr();
+```
+
 ### FileStream
 
 Validates if the local file exists and opens it up for you to use.
@@ -64,6 +76,17 @@ Validates if the local file exists and opens it up for you to use.
 use Phpro\ResourceStream\Factory\FileStream;
 
 $stream = FileStream::create('/path/to/file', FileStream::READ_WRITE_MODE);
+```
+
+### IOStream
+
+Can be used to open up CGI `php://input` and `php://output` streams.
+
+```php
+use Phpro\ResourceStream\Factory\IOStream;
+
+$input = IOStream::input();
+$output = IOStream::output();
 ```
 
 ### MemoryStream
