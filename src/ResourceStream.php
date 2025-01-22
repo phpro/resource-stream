@@ -31,6 +31,22 @@ final class ResourceStream
         $this->unwrap();
     }
 
+    /**
+     * @param mixed $resource
+     *
+     * @psalm-assert resource $resource
+     *
+     * @throws RuntimeException
+     */
+    public static function parse(mixed $resource): self
+    {
+        if (!is_resource($resource)) {
+            throw ResourceStreamException::noResource();
+        }
+
+        return new self($resource);
+    }
+
     public function __destruct()
     {
         if (!$this->keepAlive) {
