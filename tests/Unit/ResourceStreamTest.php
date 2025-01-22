@@ -25,6 +25,22 @@ class ResourceStreamTest extends TestCase
     }
 
     #[Test]
+    public function it_can_parse_a_valid_stream(): void
+    {
+        $f = fopen('php://memory', 'r');
+        $resourceStream = ResourceStream::parse($f);
+
+        self::assertSame($f, $resourceStream->unwrap());
+    }
+
+    #[Test]
+    public function it_can_parse_a_mixed_value_to_be_a_stream(): void
+    {
+        $this->expectException(ResourceStreamException::class);
+        ResourceStream::parse('no-stream');
+    }
+
+    #[Test]
     public function it_can_unwrap_a_stream(): void
     {
         $f = fopen('php://memory', 'r');
