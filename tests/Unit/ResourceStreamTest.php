@@ -163,6 +163,14 @@ class ResourceStreamTest extends TestCase
     }
 
     #[Test]
+    public function it_do_not_now_size_if_fstat_failed(): void
+    {
+        $stream = new ResourceStream(fopen('https://www.google.com/', 'r'));
+
+        self::assertSame(0, $stream->size());
+    }
+
+    #[Test]
     public function it_knows_the_uri(): void
     {
         $stream = MemoryStream::create();

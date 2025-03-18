@@ -211,12 +211,9 @@ final class ResourceStream
     public function size(): int
     {
         $resource = $this->unwrap();
-        $stat = SafeStreamAction::run(
-            static fn (): array => fstat($resource),
-            'Failed to stat resource stream.'
-        );
+        $stat = fstat($resource) ?: [];
 
-        return (int) ($stat['size'] ?? 0);
+        return $stat['size'] ?? 0;
     }
 
     /**
