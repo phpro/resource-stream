@@ -220,7 +220,8 @@ class ResourceStreamTest extends TestCase
     #[Test]
     public function it_throws_stream_action_exception_if_fstat_fails(): void
     {
-        $stream = new ResourceStream(fopen('https://www.google.com/', 'r'));
+        $stream = new ResourceStream(fopen('fakefailing://', 'r'));
+
         $this->expectException(StreamActionFailureException::class);
         $this->expectExceptionMessage('Failed to fstat of resource stream.');
 
