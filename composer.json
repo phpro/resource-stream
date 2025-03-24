@@ -20,6 +20,9 @@
             "Phpro\\ResourceStream\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": { "Phpro\\ResourceStream\\Tests\\": "tests/" }
+    },
     "authors": [
         {
             "name": "Toon Verwerft",

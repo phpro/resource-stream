@@ -152,7 +152,7 @@ final class ResourceStream
         $target = $targetStream->unwrap();
 
         SafeStreamAction::run(
-            static fn (): int => stream_copy_to_stream($resource, $target, $length, $offset),
+            static fn (): int|false => stream_copy_to_stream($resource, $target, $length, $offset),
             'Failed to copy to resource stream.'
         );
 
@@ -172,7 +172,7 @@ final class ResourceStream
         $resource = $this->unwrap();
 
         SafeStreamAction::run(
-            static fn (): int => stream_copy_to_stream($source, $resource, $length, $offset),
+            static fn (): int|false => stream_copy_to_stream($source, $resource, $length, $offset),
             'Failed to copy from resource stream.'
         );
 
@@ -195,12 +195,12 @@ final class ResourceStream
     /**
      * @throws RuntimeException
      */
-    public function getContents(): string
+    public function getContents(?int $length = null, int $offset = -1): string
     {
         $resource = $this->unwrap();
 
         return SafeStreamAction::run(
-            static fn (): string => stream_get_contents($resource),
+            static fn (): string|false => stream_get_contents($resource, $length, $offset),
             'Failed to read contents of resource stream.'
         );
     }
@@ -212,11 +212,11 @@ final class ResourceStream
     {
         $resource = $this->unwrap();
         $stat = SafeStreamAction::run(
-            static fn (): array => fstat($resource),
-            'Failed to stat resource stream.'
+            static fn (): array|false => fstat($resource),
+            'Failed to fstat of resource stream.'
         );
 
-        return (int) ($stat['size'] ?? 0);
+        return $stat['size'];
     }
 
     /**
@@ -227,7 +227,7 @@ final class ResourceStream
         $resource = $this->unwrap();
 
         return SafeStreamAction::run(
-            static fn (): string => fread($resource, $length),
+            static fn (): string|false => fread($resource, $length),
             'Failed to read contents of resource stream.'
         );
     }
@@ -240,7 +240,7 @@ final class ResourceStream
         $resource = $this->unwrap();
 
         return SafeStreamAction::run(
-            static fn (): string => stream_get_line($resource, $length, $ending),
+            static fn (): string|false => stream_get_line($resource, $length, $ending),
             'Failed to read contents of resource stream.'
         );
     }
@@ -279,7 +279,7 @@ final class ResourceStream
         $resource = $this->unwrap();
 
         SafeStreamAction::run(
-            static fn (): int => fwrite($resource, $data),
+            static fn (): int|false => fwrite($resource, $data),
             'Failed to write to resource stream.'
         );
 

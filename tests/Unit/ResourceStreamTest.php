@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Phpro\ResourceStreamTest\Unit;
+namespace Phpro\ResourceStream\Tests\Unit;
 
 use Phpro\ResourceStream\Exception\ResourceStreamException;
+use Phpro\ResourceStream\Exception\StreamActionFailureException;
 use Phpro\ResourceStream\Factory\MemoryStream;
 use Phpro\ResourceStream\ResourceStream;
+use Phpro\ResourceStream\Tests\fixtures\FakeFailingStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -14,6 +16,14 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(ResourceStream::class)]
 class ResourceStreamTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        $registered = stream_wrapper_register('fakefailing', FakeFailingStream::class);
+        if (false === $registered) {
+            throw new \RuntimeException('Failed to register "fakefailing" stream wrapper.');
+        }
+    }
+
     #[Test]
     public function it_detects_closed_streams_during_construction(): void
     {
@@ -84,6 +94,28 @@ class ResourceStreamTest extends TestCase
     }
 
     #[Test]
+    public function it_throws_stream_action_exception_if_read_fails(): void
+    {
+        $stream = new ResourceStream(fopen('fakefailing://', 'r'));
+
+        $this->expectException(StreamActionFailureException::class);
+        $this->expectExceptionMessage('Failed to read contents of resource stream.');
+
+        $stream->read();
+    }
+
+    #[Test]
+    public function it_throws_stream_action_exception_if_write_fails(): void
+    {
+        $stream = new ResourceStream(fopen('php://memory', 'r'));
+
+        $this->expectException(StreamActionFailureException::class);
+        $this->expectExceptionMessage('Failed to write to resource stream.');
+
+        $stream->write('hello');
+    }
+
+    #[Test]
     public function it_can_read_line_from_stream(): void
     {
         $stream = MemoryStream::create()
@@ -93,6 +125,17 @@ class ResourceStreamTest extends TestCase
         $line = $stream->readLine();
 
         self::assertSame('hello', $line);
+    }
+
+    #[Test]
+    public function it_throws_stream_action_exception_if_read_line_fails(): void
+    {
+        $stream = new ResourceStream(fopen('php://memory', 'w'));
+
+        $this->expectException(StreamActionFailureException::class);
+        $this->expectExceptionMessage('Failed to read contents of resource stream.');
+
+        $stream->readLine();
     }
 
     #[Test]
@@ -127,6 +170,18 @@ class ResourceStreamTest extends TestCase
             ->rewind();
 
         self::assertSame($content, $stream->getContents());
+        self::assertSame('ello', $stream->getContents(4, 1));
+    }
+
+    #[Test]
+    public function it_throws_stream_action_exception_if_read_contents_fails(): void
+    {
+        $stream = new ResourceStream(fopen('fakefailing://', 'r'));
+
+        $this->expectException(StreamActionFailureException::class);
+        $this->expectExceptionMessage('Failed to read contents of resource stream.');
+
+        $stream->getContents(offset: 9999);
     }
 
     #[Test]
@@ -163,6 +218,17 @@ class ResourceStreamTest extends TestCase
     }
 
     #[Test]
+    public function it_throws_stream_action_exception_if_fstat_fails(): void
+    {
+        $stream = new ResourceStream(fopen('fakefailing://', 'r'));
+
+        $this->expectException(StreamActionFailureException::class);
+        $this->expectExceptionMessage('Failed to fstat of resource stream.');
+
+        $stream->size();
+    }
+
+    #[Test]
     public function it_knows_the_uri(): void
     {
         $stream = MemoryStream::create();
@@ -182,6 +248,18 @@ class ResourceStreamTest extends TestCase
     }
 
     #[Test]
+    public function it_throws_stream_action_exception_if_copy_from_fails(): void
+    {
+        $stream1 = new ResourceStream(fopen('php://memory', 'r'));
+        $stream2 = MemoryStream::create()->write('hello')->rewind();
+
+        $this->expectException(StreamActionFailureException::class);
+        $this->expectExceptionMessage('Failed to copy from resource stream.');
+
+        $stream1->copyFrom($stream2);
+    }
+
+    #[Test]
     public function it_can_copy_to(): void
     {
         $stream1 = MemoryStream::create();
@@ -190,6 +268,18 @@ class ResourceStreamTest extends TestCase
         $stream2->copyTo($stream1)->rewind();
 
         self::assertSame('hello', $stream1->getContents());
+    }
+
+    #[Test]
+    public function it_throws_stream_action_exception_if_copy_to_fails(): void
+    {
+        $stream1 = new ResourceStream(fopen('php://memory', 'r'));
+        $stream2 = MemoryStream::create()->write('hello')->rewind();
+
+        $this->expectException(StreamActionFailureException::class);
+        $this->expectExceptionMessage('Failed to copy to resource stream.');
+
+        $stream2->copyTo($stream1);
     }
 
     #[Test]
