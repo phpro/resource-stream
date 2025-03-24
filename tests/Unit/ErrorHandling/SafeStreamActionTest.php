@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unit\ErrorHandling;
+namespace Phpro\ResourceStream\Tests\Unit\ErrorHandling;
 
 use Phpro\ResourceStream\ErrorHandling\SafeStreamAction;
 use Phpro\ResourceStream\Exception\StreamActionFailureException;

@@ -195,12 +195,12 @@ final class ResourceStream
     /**
      * @throws RuntimeException
      */
-    public function getContents(): string
+    public function getContents(?int $length = null, int $offset = -1): string
     {
         $resource = $this->unwrap();
 
         return SafeStreamAction::run(
-            static fn (): string|false => stream_get_contents($resource),
+            static fn (): string|false => stream_get_contents($resource, $length, $offset),
             'Failed to read contents of resource stream.'
         );
     }

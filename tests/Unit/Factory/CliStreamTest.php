@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unit\Factory;
+namespace Phpro\ResourceStream\Tests\Unit\Factory;
 
 use Phpro\ResourceStream\Factory\CliStream;
 use PHPUnit\Framework\Attributes\CoversClass;

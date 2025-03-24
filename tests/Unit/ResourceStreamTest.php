@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Phpro\ResourceStreamTest\Unit;
+namespace Phpro\ResourceStream\Tests\Unit;
 
 use Phpro\ResourceStream\Exception\ResourceStreamException;
 use Phpro\ResourceStream\Exception\StreamActionFailureException;
 use Phpro\ResourceStream\Factory\MemoryStream;
 use Phpro\ResourceStream\ResourceStream;
+use Phpro\ResourceStream\Tests\fixtures\FakeFailingStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -15,6 +16,14 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(ResourceStream::class)]
 class ResourceStreamTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        $registered = stream_wrapper_register('fakefailing', FakeFailingStream::class);
+        if (false === $registered) {
+            throw new \RuntimeException('Failed to register "fakefailing" stream wrapper.');
+        }
+    }
+
     #[Test]
     public function it_detects_closed_streams_during_construction(): void
     {
@@ -85,6 +94,17 @@ class ResourceStreamTest extends TestCase
     }
 
     #[Test]
+    public function it_throws_stream_action_exception_if_read_fails(): void
+    {
+        $stream = new ResourceStream(fopen('fakefailing://', 'r'));
+
+        $this->expectException(StreamActionFailureException::class);
+        $this->expectExceptionMessage('Failed to read contents of resource stream.');
+
+        $stream->read();
+    }
+
+    #[Test]
     public function it_throws_stream_action_exception_if_write_fails(): void
     {
         $stream = new ResourceStream(fopen('php://memory', 'r'));
@@ -150,6 +170,18 @@ class ResourceStreamTest extends TestCase
             ->rewind();
 
         self::assertSame($content, $stream->getContents());
+        self::assertSame('ello', $stream->getContents(4, 1));
+    }
+
+    #[Test]
+    public function it_throws_stream_action_exception_if_read_contents_fails(): void
+    {
+        $stream = new ResourceStream(fopen('fakefailing://', 'r'));
+
+        $this->expectException(StreamActionFailureException::class);
+        $this->expectExceptionMessage('Failed to read contents of resource stream.');
+
+        $stream->getContents(offset: 9999);
     }
 
     #[Test]

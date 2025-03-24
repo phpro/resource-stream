@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unit\Exception;
+namespace Phpro\ResourceStream\Tests\Unit\Exception;
 
 use Phpro\ResourceStream\Exception\StreamActionFailureException;
 use PHPUnit\Framework\Attributes\CoversClass;
