@@ -1,6 +1,7 @@
 grumphp:
     tasks:
-        phpunit: ~
+        phpunit:
+            coverage-xml: clover-coverage.xml
         psalm: ~
         phpcsfixer:
             config: .php-cs-fixer.php
