@@ -10,7 +10,7 @@ jobs:
         strategy:
             matrix:
                 operating-system: [ubuntu-latest, macos-latest]
-                php-versions: ['8.1', '8.2', '8.3']
+                php-versions: ['8.3', '8.4', '8.5']
                 composer-deps: ['highest', 'lowest']
                 composer-versions: ['composer:v2']
             fail-fast: false
@@ -30,15 +30,19 @@ jobs:
                 php -m
                 composer --version
             - name: Set env vars for latest PHP version
-              if: matrix.php-versions == '8.4'
+              if: matrix.php-versions == '8.5'
               run: |
                 export COMPOSER_IGNORE_PLATFORM_REQ=php+
             - name: Install dependencies (highest)
               if: matrix.composer-deps == 'highest'
               run: composer update --prefer-dist --no-progress --no-suggest
+              env:
+                COMPOSER_IGNORE_PLATFORM_REQ: php+
             - name: Install dependencies (lowest)
               if: matrix.composer-deps == 'lowest'
               run: composer update --prefer-dist --no-progress --no-suggest --prefer-lowest
+              env:
+                COMPOSER_IGNORE_PLATFORM_REQ: php+
             - name: Set git variables
               run: |
                 git config --global user.email "you@example.com"
@@ -46,3 +50,4 @@ jobs:
                 git config --global protocol.file.allow always
             - name: Run the tests
               run: php vendor/bin/grumphp run --no-interaction
+              continue-on-error: ${{ matrix.php-versions == '8.5' }}
