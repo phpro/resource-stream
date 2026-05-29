@@ -126,3 +126,19 @@ use Phpro\ResourceStream\Factory\TmpStream;
 
 $stream = TmpStream::create();
 ```
+
+### ZipStream
+
+Opens a single entry from a zip archive as a read-only stream.
+Validates that the archive exists before opening; failures (missing entry, corrupt archive, wrong/missing password) surface as a `StreamActionFailureException` carrying the underlying PHP message.
+
+```php
+use Phpro\ResourceStream\Factory\ZipStream;
+
+$stream = ZipStream::read('/path/to/archive.zip', 'folder/file.txt');
+
+// For encrypted entries, pass any options accepted by the `zip` stream context:
+$stream = ZipStream::read('/path/to/archive.zip', 'secret.txt', ['password' => 'secret']);
+```
+
+Note: the `zip://` stream wrapper is read-only. To write into an archive, use PHP's `ZipArchive` directly.
