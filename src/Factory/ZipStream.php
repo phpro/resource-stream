@@ -30,9 +30,7 @@ final class ZipStream
         $context = [] === $zipOptions ? null : stream_context_create(['zip' => $zipOptions]);
 
         $resource = SafeStreamAction::run(
-            static fn () => null !== $context
-                ? fopen($uri, self::READ_MODE, false, $context)
-                : fopen($uri, self::READ_MODE),
+            static fn () => fopen($uri, self::READ_MODE, context: $context),
             'Unable to open zip entry "'.$entry.'" in archive "'.$archivePath.'"'
         );
 
