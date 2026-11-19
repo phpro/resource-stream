@@ -46,7 +46,10 @@ final class SafeStreamActionTest extends TestCase
     public function it_can_fail_running_an_action_with_system_details(): void
     {
         $this->expectException(StreamActionFailureException::class);
-        $this->expectExceptionMessage('Action failed (fopen(doesnotexist): Failed to open stream: No such file or directory)');
+        // PHP 8.6 dropped the argument from the warning prefix: "fopen(): ..." instead of "fopen(doesnotexist): ...".
+        $this->expectExceptionMessageMatches(
+            '/^Action failed \(fopen\((doesnotexist)?\): Failed to open stream: No such file or directory\)$/'
+        );
 
         SafeStreamAction::run(
             static fn () => fopen('doesnotexist', 'r'),

@@ -10,7 +10,7 @@ jobs:
         strategy:
             matrix:
                 operating-system: [ubuntu-latest, macos-latest]
-                php-versions: ['8.3', '8.4', '8.5']
+                php-versions: ['8.3', '8.4', '8.5', '8.6']
                 composer-deps: ['highest', 'lowest']
                 composer-versions: ['composer:v2']
             fail-fast: false
@@ -50,4 +50,4 @@ jobs:
                 git config --global protocol.file.allow always
             - name: Run the tests
               run: php vendor/bin/grumphp run --no-interaction
-              continue-on-error: ${{ matrix.php-versions == '8.5' }}
+              continue-on-error: ${{ contains(fromJSON('["8.5", "8.6"]'), matrix.php-versions) }}
