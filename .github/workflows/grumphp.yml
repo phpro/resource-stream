@@ -29,20 +29,15 @@ jobs:
                 php -v
                 php -m
                 composer --version
-            - name: Set env vars for latest PHP version
-              if: matrix.php-versions == '8.5'
-              run: |
-                export COMPOSER_IGNORE_PLATFORM_REQ=php+
             - name: Install dependencies (highest)
               if: matrix.composer-deps == 'highest'
               run: composer update --prefer-dist --no-progress --no-suggest
-              env:
-                COMPOSER_IGNORE_PLATFORM_REQ: php+
             - name: Install dependencies (lowest)
               if: matrix.composer-deps == 'lowest'
-              run: composer update --prefer-dist --no-progress --no-suggest --prefer-lowest
-              env:
-                COMPOSER_IGNORE_PLATFORM_REQ: php+
+              # Psalm 7 allows amphp versions that are too old to boot on PHP 8.4+, so its own tree stays on highest.
+              run: |
+                composer update --prefer-dist --no-progress --no-suggest --prefer-lowest
+                composer update --prefer-dist --no-progress --no-suggest vimeo/psalm --with-all-dependencies
             - name: Set git variables
               run: |
                 git config --global user.email "you@example.com"
@@ -50,4 +45,5 @@ jobs:
                 git config --global protocol.file.allow always
             - name: Run the tests
               run: php vendor/bin/grumphp run --no-interaction
-              continue-on-error: ${{ contains(fromJSON('["8.5", "8.6"]'), matrix.php-versions) }}
+              env:
+                PHP_CS_FIXER_IGNORE_ENV: 1
